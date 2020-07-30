@@ -2,13 +2,13 @@ import React from 'react';
 import './index.scss';
 import { ReactComponent as RefreshIcon } from '../../assets/img/refresh-icon.svg';
 
-const header = () => {
+const Header = () => {
   return (
-    <div className="header">
+    <div className="Header">
       <RefreshIcon className="refresh" />
       <p className="date">Monday, Jul 27</p>
     </div>
   );
 }
 
-export default header;
+export default Header;
