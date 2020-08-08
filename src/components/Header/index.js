@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import dayjs from 'dayjs';
 import './index.scss';
 import { ReactComponent as RefreshIcon } from '../../assets/img/refresh-icon.svg';
 
@@ -6,8 +7,7 @@ class header extends Component {
   render() {
     return (
       <div className="header">
-        <RefreshIcon className="refresh" />
-        <p className="date">Monday, Jul 27</p>
+        <p className="date">{ dayjs().format('dddd, MMM D') }</p>
       </div>
     );
   }
