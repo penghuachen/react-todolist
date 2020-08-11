@@ -14,51 +14,38 @@ const App = () => {
     taskInput: ''
   };
   const [todoState, setTodoState] = useState(initState);
-  const { 
-    todoTasks, 
-    taskInput, 
-    filterTodoTasks, 
-    status 
-  } = todoState;
+
   const propsAddTask = task => {
-    setTodoState(state => {
-      const { todoTasks } = state;
+    setTodoState(({ todoTasks, taskInput, ...state }) => {
       todoTasks.push(task);
-      return state;
+      return { taskInput: '', todoTasks, ...state };
     });
-    setTodoState(state => {
-      return {
-        ...state,
-        taskInput: ''
-      };
-    });
-    propsFilterTodoTasks(status);
+    propsFilterTodoTasks(todoState.status);
   };
 
   const propsTaskInputHandler = value => {
-    setTodoState(state => {
-      return { ...state, taskInput: value };
+    setTodoState(({ taskInput, ...state }) => {
+      return { taskInput: value, ...state };
     });
   };
 
   const propsTaskStatusHandler = task => {
     const { id } = task;
-    setTodoState(state => {
-      let { todoTasks } = state;
+    setTodoState(({ todoTasks, ...state }) => {
       const index = todoTasks.findIndex(task => task.id === id);
       todoTasks[index] = task;
-      return { ...state, todoTasks };
+      return { todoTasks, ...state };
     });
-    propsFilterTodoTasks(status);
+    propsFilterTodoTasks(todoState.status);
   };
 
   const propsRemoveAllTasks = () => {
     const request = window.confirm("確定要刪除所有待辦任務嗎");
     if (request) {
-      setTodoState(state => {
-        return { ...state, todoTasks: [] };
+      setTodoState(({ todoTasks, ...state }) => {
+        return { todoTasks: [], ...state };
       });
-      propsFilterTodoTasks(status);
+      propsFilterTodoTasks(todoState.status);
       alert('成功刪除');
     } else {
       alert('取消刪除所有待辦任務。');
@@ -66,26 +53,25 @@ const App = () => {
   };
 
   const propsRemoveTask = id => {
-    setTodoState(state => {
-      const { todoTasks } = state; 
+    setTodoState(({ todoTasks, ...state }) => {
       const index = todoTasks.findIndex(task => task.id === id);
       todoTasks.splice(index, 1);
-      return { ...state, todoTasks };
+      return { todoTasks, ...state };
     });
-    propsFilterTodoTasks(status);
+    propsFilterTodoTasks(todoState.status);
   };
 
   const propsFilterTodoTasks = statusRegion => {
-    setTodoState(state => {
-      let { todoTasks } = state; 
+    setTodoState(({ filterTodoTasks, todoTasks, status, ...state }) => {
       let arr = [];
       if (statusRegion === '全部') arr = todoTasks;
       if (statusRegion === '進行中') arr = todoTasks.filter(task => !task.done);
       if (statusRegion === '已完成') arr = todoTasks.filter(task => task.done);
       return {
-        ...state,
         filterTodoTasks: arr,
-        status: statusRegion
+        status: statusRegion,
+        todoTasks,
+        ...state
       };
     })
   };
@@ -95,15 +81,15 @@ const App = () => {
       <div className="container">
         <Header propsRemoveAllTasks={ propsRemoveAllTasks }/>
         <TodoContent 
-          todoTasks={ todoTasks }
-          filterTodoTasks={ filterTodoTasks }
+          todoTasks={ todoState.todoTasks }
+          filterTodoTasks={ todoState.filterTodoTasks }
           propsTaskStatusHandler={ propsTaskStatusHandler }
           propsRemoveTask={ propsRemoveTask }
           propsFilterTodoTasks={ propsFilterTodoTasks }
-          status={ status }
+          status={ todoState.status }
         />
         <AddTask 
-          taskInput={ taskInput }
+          taskInput={ todoState.taskInput }
           propsAddTask={ propsAddTask }
           propsTaskInputHandler={ propsTaskInputHandler }
         />
