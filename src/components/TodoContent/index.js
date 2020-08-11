@@ -10,6 +10,7 @@ class todoContent extends Component {
     return (
       <div className="content">
         <TaskContent 
+          propsTaskStatusHandler={ propsTaskStatusHandler }
           propsRemoveTask={ propsRemoveTask }
         />
       </div>

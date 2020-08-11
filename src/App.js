@@ -27,6 +27,16 @@ class App extends Component {
     });
   }
 
+  propsTaskStatusHandler = task => {
+    const { id } = task;
+    this.setState(state => {
+      let { todoTasks } = state;
+      const index = todoTasks.findIndex(task => task.id === id);
+      todoTasks[index] = task;
+      return state;
+    });
+  }
+
   propsRemoveAllTasks = () => {
     const request = window.confirm("確定要刪除所有待辦任務嗎");
     if (request) {
@@ -56,6 +66,7 @@ class App extends Component {
           <Header propsRemoveAllTasks={ this.propsRemoveAllTasks } />
           <TodoContent
             todoTasks={ todoTasks }
+            propsTaskStatusHandler={ this.propsTaskStatusHandler }
             propsRemoveTask={ this.propsRemoveTask }
           />
           <AddTask 

@@ -4,10 +4,12 @@ import { todoTaskDOMGenerator } from '../../../assets/utils/todoTaskDOMGenerator
 class taskContent extends Component {
   render() {
     const { 
+      propsTaskStatusHandler,
       propsRemoveTask
     } = this.props;
 
     const taskMethods = {
+      propsTaskStatusHandler,
       propsRemoveTask
     };
     

@@ -5,8 +5,33 @@ import { ReactComponent as CheckIcon } from '../img/check-icon.svg';
 export const todoTaskDOMGenerator = task => {
   const { id, done, edit, taskContent } = task;
   const {
+    propsTaskStatusHandler,
     propsRemoveTask
   } = taskMethods;
+
+  const emitTaskDoneHandler = task => {
+    task.done = true;
+    propsTaskStatusHandler(task);
+  };
+  const emitTaskuUnDoneHandler = task => {
+    task.done = false;
+    propsTaskStatusHandler(task)
+  };   
+
+  const emitEditedTaskHandler = (e, task) => {
+
+    task.edit = true; 
+    propsTaskStatusHandler(task);
+  };
+
+  const emitUnEditedTaskHandler = (e, task) => {
+    if (e.charCode === 13) {
+      task.edit = false; 
+      task.taskContent = e.target.value;
+      propsTaskStatusHandler(task);
+    }
+  };
+
   const emitRemoveTask = id => {
     propsRemoveTask(id);
   };
