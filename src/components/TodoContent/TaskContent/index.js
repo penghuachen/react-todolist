@@ -3,11 +3,18 @@ import './index.scss';
 import { todoTaskDOMGenerator } from '../../../assets/utils/todoTaskDOMGenerator.js';
 class taskContent extends Component {
   render() {
-    const { todoTasks } = this.props;
+    const { 
+      propsRemoveTask
+    } = this.props;
+
+    const taskMethods = {
+      propsRemoveTask
+    };
+    
 
     return (
       <div className="task-list">
-        { todoTasks.map(task => todoTaskDOMGenerator(task)) }
+        { filterTodoTasks.map(task => todoTaskDOMGenerator(task, taskMethods)) }
       </div>
     );
   }

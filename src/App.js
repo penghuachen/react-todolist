@@ -27,14 +27,36 @@ class App extends Component {
     });
   }
 
+  propsRemoveAllTasks = () => {
+    const request = window.confirm("確定要刪除所有待辦任務嗎");
+    if (request) {
+      this.setState({ todoTasks: [] });
+      alert('成功刪除');
+    } else {
+      alert('取消刪除所有待辦任務。');
+    }
+  };
+
+  propsRemoveTask = id => {
+    this.setState(state => {
+      const { todoTasks } = state; 
+      const index = todoTasks.findIndex(task => task.id === id);
+      todoTasks.splice(index, 1);
+      return state;
+    });
+  }
+
+  }
+
   render() {
     const { todoTasks,taskInput } = this.state;
     return (
       <div className="app"> 
         <div className="container">
-          <Header />
+          <Header propsRemoveAllTasks={ this.propsRemoveAllTasks } />
           <TodoContent
             todoTasks={ todoTasks }
+            propsRemoveTask={ this.propsRemoveTask }
           />
           <AddTask 
             taskInput={ taskInput }

@@ -9,8 +9,9 @@ class todoContent extends Component {
     const { todoTasks } = this.props;
     return (
       <div className="content">
-        <TaskStatus />
-        <TaskContent todoTasks={ todoTasks }/>
+        <TaskContent 
+          propsRemoveTask={ propsRemoveTask }
+        />
       </div>
     );
   }
