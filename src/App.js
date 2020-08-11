@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './App.scss';
 
 // components
@@ -6,104 +6,109 @@ import AddTask from './components/AddTask';
 import Header from './components/Header';
 import TodoContent from './components/TodoContent';
 
-class App extends Component {
-  state = {
+const App = () => {
+  const initState = {
     todoTasks: [],
     filterTodoTasks: [],
     status: '全部',
     taskInput: ''
-  }
-
-  propsAddTask = task => {
-    this.setState(state => {
+  };
+  const [todoState, setTodoState] = useState(initState);
+  const { 
+    todoTasks, 
+    taskInput, 
+    filterTodoTasks, 
+    status 
+  } = todoState;
+  const propsAddTask = task => {
+    setTodoState(state => {
       const { todoTasks } = state;
       todoTasks.push(task);
       return state;
     });
-    this.setState({ taskInput: '' });
-    this.propsFilterTodoTasks(this.state.status);
-  }
-
-  propsTaskInputHandler = value => {
-    this.setState({
-      taskInput: value
+    setTodoState(state => {
+      return {
+        ...state,
+        taskInput: ''
+      };
     });
-  }
+    propsFilterTodoTasks(status);
+  };
 
-  propsTaskStatusHandler = task => {
+  const propsTaskInputHandler = value => {
+    setTodoState(state => {
+      return { ...state, taskInput: value };
+    });
+  };
+
+  const propsTaskStatusHandler = task => {
     const { id } = task;
-    this.setState(state => {
+    setTodoState(state => {
       let { todoTasks } = state;
       const index = todoTasks.findIndex(task => task.id === id);
       todoTasks[index] = task;
-      return state;
+      return { ...state, todoTasks };
     });
-    this.propsFilterTodoTasks(this.state.status);
-  }
+    propsFilterTodoTasks(status);
+  };
 
-  propsRemoveAllTasks = () => {
+  const propsRemoveAllTasks = () => {
     const request = window.confirm("確定要刪除所有待辦任務嗎");
     if (request) {
-      this.setState({ todoTasks: [] });
-      this.propsFilterTodoTasks(this.state.status);
+      setTodoState(state => {
+        return { ...state, todoTasks: [] };
+      });
+      propsFilterTodoTasks(status);
       alert('成功刪除');
     } else {
       alert('取消刪除所有待辦任務。');
     }
   };
 
-  propsRemoveTask = id => {
-    this.setState(state => {
+  const propsRemoveTask = id => {
+    setTodoState(state => {
       const { todoTasks } = state; 
       const index = todoTasks.findIndex(task => task.id === id);
       todoTasks.splice(index, 1);
-      return state;
+      return { ...state, todoTasks };
     });
-    this.propsFilterTodoTasks(this.state.status);
-  }
+    propsFilterTodoTasks(status);
+  };
 
-  propsFilterTodoTasks = statusRegion => {
-    this.setState(state => {
+  const propsFilterTodoTasks = statusRegion => {
+    setTodoState(state => {
       let { todoTasks } = state; 
       let arr = [];
       if (statusRegion === '全部') arr = todoTasks;
       if (statusRegion === '進行中') arr = todoTasks.filter(task => !task.done);
       if (statusRegion === '已完成') arr = todoTasks.filter(task => task.done);
       return {
+        ...state,
         filterTodoTasks: arr,
         status: statusRegion
       };
     })
-  }
+  };
 
-  render() {
-    const { 
-      todoTasks, 
-      taskInput, 
-      filterTodoTasks, 
-      status 
-    } = this.state;
-    return (
-      <div className="app"> 
-        <div className="container">
-          <Header propsRemoveAllTasks={ this.propsRemoveAllTasks } />
-          <TodoContent
-            todoTasks={ todoTasks }
-            filterTodoTasks={ filterTodoTasks }
-            propsTaskStatusHandler={ this.propsTaskStatusHandler }
-            propsRemoveTask={ this.propsRemoveTask }
-            propsFilterTodoTasks={ this.propsFilterTodoTasks }
-            status={ status }
-          />
-          <AddTask 
-            taskInput={ taskInput }
-            propsAddTask={ this.propsAddTask }
-            propsTaskInputHandler={ this.propsTaskInputHandler }
-          />
-        </div>
+  return (
+    <div className="app"> 
+      <div className="container">
+        <Header propsRemoveAllTasks={ propsRemoveAllTasks }/>
+        <TodoContent 
+          todoTasks={ todoTasks }
+          filterTodoTasks={ filterTodoTasks }
+          propsTaskStatusHandler={ propsTaskStatusHandler }
+          propsRemoveTask={ propsRemoveTask }
+          propsFilterTodoTasks={ propsFilterTodoTasks }
+          status={ status }
+        />
+        <AddTask 
+          taskInput={ taskInput }
+          propsAddTask={ propsAddTask }
+          propsTaskInputHandler={ propsTaskInputHandler }
+        />
       </div>
-    );
-  }
+    </div>
+  );
 }
-
 export default App;
