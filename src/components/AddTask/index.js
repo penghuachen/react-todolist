@@ -19,10 +19,10 @@ class addTask extends Component {
   };
 
   render() {
+    const { taskInput } = this.props;
     const { 
-      propsAddTask, 
-      propsTaskInputHandler,
-      taskInput 
+      propsAddTask,
+      propsTaskInputHandler
     } = this.props;
 
     return (

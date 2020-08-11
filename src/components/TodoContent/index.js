@@ -6,10 +6,20 @@ import TaskStatus from './TaskStatus';
 
 class todoContent extends Component {
   render() {
-    const { todoTasks } = this.props;
+    const { filterTodoTasks, status } = this.props;
+    const { 
+      propsTaskStatusHandler,
+      propsRemoveTask,
+      propsFilterTodoTasks
+    } = this.props;
     return (
       <div className="content">
+        <TaskStatus
+          propsFilterTodoTasks={ propsFilterTodoTasks }
+          status={ status }
+        />
         <TaskContent 
+          filterTodoTasks={ filterTodoTasks }
           propsTaskStatusHandler={ propsTaskStatusHandler }
           propsRemoveTask={ propsRemoveTask }
         />

@@ -2,7 +2,11 @@ import React from 'react';
 
 import { ReactComponent as DeleteIcon } from '../img/delete-icon.svg';
 import { ReactComponent as CheckIcon } from '../img/check-icon.svg';
-export const todoTaskDOMGenerator = task => {
+
+
+
+export const todoTaskDOMGenerator = (task, taskMethods) => {
+
   const { id, done, edit, taskContent } = task;
   const {
     propsTaskStatusHandler,
@@ -17,6 +21,45 @@ export const todoTaskDOMGenerator = task => {
     task.done = false;
     propsTaskStatusHandler(task)
   };   
+  const checkTaskStatus = done => {
+    const undonedTask = (
+      <div 
+        className="undone" 
+        onClick={ () => emitTaskDoneHandler(task) }>
+      </div>
+    );
+
+    const donedTask = (
+      <div 
+        className="done"
+        onClick={ () => emitTaskuUnDoneHandler(task) }
+      >
+        <CheckIcon />
+      </div>
+    );
+
+    return !done ? undonedTask : donedTask;
+  };
+
+  const checkTaskEditStatus = (edit, done) => {
+    const editedTask = (
+      <input 
+        className="editTask" 
+        onKeyPress={ (e) => emitUnEditedTaskHandler(e, task) }
+      />
+    );
+
+    const uneditedTask  = (
+      <p 
+        onDoubleClick={ (e) => emitEditedTaskHandler(e, task) }
+        className={ done ? 'line-through' : null }
+      >
+        { taskContent }
+      </p>
+    );
+
+    return edit ? editedTask : uneditedTask;
+  };
 
   const emitEditedTaskHandler = (e, task) => {
 
@@ -38,13 +81,9 @@ export const todoTaskDOMGenerator = task => {
 
   return (
     <div className="task" key={ id } id={ id }>
-      <div className="undone"></div>
-      {/* <div className="done">
-        <CheckIcon />
-      </div> */}
+      { checkTaskStatus(done) }
       <div className="task-content">
-      <p>{ taskContent }</p>
-        {/* <input className="editTask" /> */}
+        { checkTaskEditStatus(edit, done) }
       </div>
       <div className="delete-icon" onClick={ () => emitRemoveTask(id) }>
         <DeleteIcon/>

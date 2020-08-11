@@ -3,6 +3,7 @@ import './index.scss';
 import { todoTaskDOMGenerator } from '../../../assets/utils/todoTaskDOMGenerator.js';
 class taskContent extends Component {
   render() {
+    const { filterTodoTasks } = this.props;
     const { 
       propsTaskStatusHandler,
       propsRemoveTask

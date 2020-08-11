@@ -9,6 +9,8 @@ import TodoContent from './components/TodoContent';
 class App extends Component {
   state = {
     todoTasks: [],
+    filterTodoTasks: [],
+    status: '全部',
     taskInput: ''
   }
 
@@ -19,6 +21,7 @@ class App extends Component {
       return state;
     });
     this.setState({ taskInput: '' });
+    this.propsFilterTodoTasks(this.state.status);
   }
 
   propsTaskInputHandler = value => {
@@ -35,12 +38,14 @@ class App extends Component {
       todoTasks[index] = task;
       return state;
     });
+    this.propsFilterTodoTasks(this.state.status);
   }
 
   propsRemoveAllTasks = () => {
     const request = window.confirm("確定要刪除所有待辦任務嗎");
     if (request) {
       this.setState({ todoTasks: [] });
+      this.propsFilterTodoTasks(this.state.status);
       alert('成功刪除');
     } else {
       alert('取消刪除所有待辦任務。');
@@ -54,20 +59,41 @@ class App extends Component {
       todoTasks.splice(index, 1);
       return state;
     });
+    this.propsFilterTodoTasks(this.state.status);
   }
 
+  propsFilterTodoTasks = statusRegion => {
+    this.setState(state => {
+      let { todoTasks } = state; 
+      let arr = [];
+      if (statusRegion === '全部') arr = todoTasks;
+      if (statusRegion === '進行中') arr = todoTasks.filter(task => !task.done);
+      if (statusRegion === '已完成') arr = todoTasks.filter(task => task.done);
+      return {
+        filterTodoTasks: arr,
+        status: statusRegion
+      };
+    })
   }
 
   render() {
-    const { todoTasks,taskInput } = this.state;
+    const { 
+      todoTasks, 
+      taskInput, 
+      filterTodoTasks, 
+      status 
+    } = this.state;
     return (
       <div className="app"> 
         <div className="container">
           <Header propsRemoveAllTasks={ this.propsRemoveAllTasks } />
           <TodoContent
             todoTasks={ todoTasks }
+            filterTodoTasks={ filterTodoTasks }
             propsTaskStatusHandler={ this.propsTaskStatusHandler }
             propsRemoveTask={ this.propsRemoveTask }
+            propsFilterTodoTasks={ this.propsFilterTodoTasks }
+            status={ status }
           />
           <AddTask 
             taskInput={ taskInput }
